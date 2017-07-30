@@ -1,66 +1,132 @@
-// index.js
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-  
+    count : 0,
+    moveSpeed : 0.0002,
+    location: {
+      latitude: '',
+      longitude: '',
+      speed: '',
+      accuracy: '' 
+    },
+
+    markers: [],
+
+    polyline: [{
+      points: [],
+      color:"#FF0000DD",
+      width: 2,
+      dottedLine: true
+    }]
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function (options) {
-  
+  onLoad() {
+    var that = this
+    this.getLocationInfo()
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
+/**
+ * 获取当前位置参数
+ */
+  getLocationInfo() {
+    var that = this
+
+    wx.getLocation({
+      type: 'wgs84',
+      success: function (res) {
+        console.log('消息请求成功')
+
+        that.setData({
+          location: {
+            latitude: res.latitude,
+            longitude: res.longitude,
+            speed: res.speed,
+            accuracy: res.accuracy
+          }
+        })
+
+        var positionArr = {
+            latitude: res.latitude + that.data.moveSpeed * that.data.count,
+            longitude: res.longitude,
+        }
+        /**
+         * 用点连成线
+         */
+        var points = that.data.polyline[0].points
+        points.push(positionArr)
+        
+        var polyline = [{
+          points: points,
+          color: "#FF0000DD",
+          width: 2,
+          dottedLine: true
+        }]
+        that.setData({
+          polyline: polyline
+        })
+
+        /**
+         * 将每一次的点, 记录下来
+         */
+        var markers = that.data.markers
+        var markersItem = {
+            iconPath: "/pages/resources/location.png",
+            id: that.data.count,
+            latitude: res.latitude + that.data.moveSpeed * that.data.count,
+            longitude: res.longitude,
+            width: 30,
+            height: 30
+        }
+        markers.push(markersItem)
+
+        that.setData({
+          markers: markers
+        })
+
+      }
+    })
+  },
   
+  /**
+   * 记录足迹, 每隔5秒, 更新位置信息
+   */
+  vartureMove() {
+    var that = this
+    locationTimer = setInterval(function () {
+      that.getLocationInfo()
+      var count = that.data.count + 1
+      that.setData({
+        count: count
+      })
+    }, 5000)
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-  
+  realyMove() {
+    var that = this
+    locationTimer = setInterval(function () {
+      that.getLocationInfo()
+      that.setData({
+        count: 0
+      })
+    }, 5000)
   },
 
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-  
+  stopMove(){
+    wx.showToast({
+      title: '停止获取位置信息',
+    })
+    clearInterval(locationTimer)
   },
 
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-  
+  addPosition(){
+    this.getLocationInfo()
   },
-
   /**
-   * 页面相关事件处理函数--监听用户下拉动作
+   * 点击某次标记
    */
-  onPullDownRefresh: function () {
-  
-  },
+  markertap(e) {
+    console.log(e.markerId)
 
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-  
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-  
   }
 })
+
+var locationTimer
