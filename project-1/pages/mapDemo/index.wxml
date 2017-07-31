@@ -17,10 +17,10 @@
     <text>当前纬度: </text> <text>"{{location.latitude}}"</text> 
 </view>
 <view>
-    <text>当前速度: </text> <text>"{{location.speed}}"</text> 
+    <text>当前速度: </text> <text>"{{location.speed}}" 米/秒</text> 
 </view>
 <view>
-    <text>当前精度: </text> <text>"{{location.accuracy}}"</text> 
+    <text>当前精度: </text> <text>"{{location.accuracy}}" 米</text> 
 </view>
 <button bindtap="vartureMove">模拟移动轨迹</button>
 <button bindtap="realyMove">真实获取轨迹</button>
