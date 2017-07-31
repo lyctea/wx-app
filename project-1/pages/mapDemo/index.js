@@ -29,7 +29,7 @@ Page({
  */
   getLocationInfo() {
     var that = this
-
+    
     wx.getLocation({
       type: 'wgs84',
       success: function (res) {
@@ -43,11 +43,12 @@ Page({
             accuracy: res.accuracy
           }
         })
-
+        
         var positionArr = {
             latitude: res.latitude + that.data.moveSpeed * that.data.count,
             longitude: res.longitude,
         }
+
         /**
          * 用点连成线
          */
@@ -97,17 +98,17 @@ Page({
       that.setData({
         count: count
       })
-    }, 5000)
+    }, 10000)
   },
 
   realyMove() {
     var that = this
+    that.setData({
+      count: 0
+    })
     locationTimer = setInterval(function () {
       that.getLocationInfo()
-      that.setData({
-        count: 0
-      })
-    }, 5000)
+    }, 10000)
   },
 
   stopMove(){
@@ -126,6 +127,14 @@ Page({
   markertap(e) {
     console.log(e.markerId)
 
+  },
+  /**
+   * 刷新页面
+   */
+  reloadPage() {
+    wx.redirectTo({
+      url: 'index'
+    })
   }
 })
 

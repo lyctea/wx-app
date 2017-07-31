@@ -1,7 +1,7 @@
 <map id="map" 
     longitude="{{location.longitude}}" 
     latitude="{{location.latitude}}" 
-    scale="14" 
+    scale="17" 
     markers="{{markers}}" 
     bindmarkertap="markertap" 
     polyline="{{polyline}}" 
@@ -26,3 +26,4 @@
 <button bindtap="realyMove">真实获取轨迹</button>
 <button bindtap="addPosition">增加记录点</button>
 <button bindtap="stopMove">停止获取轨迹</button>
+<button bindtap="reloadPage">页面刷新</button>
